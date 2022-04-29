@@ -1,0 +1,10 @@
+.event {
+  border-radius: 10px;
+  background-color: #EACF4F;
+  border: 1px solid #2C2B66;
+  display: flex;
+  align-items: center;
+  padding: 0 2vw;
+  position: absolute;
+  width: 10vw;
+}
