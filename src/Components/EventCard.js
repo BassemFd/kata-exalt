@@ -1,5 +1,6 @@
 import React from 'react';
 import '../Styles/EventCard.css';
+import getPositionFromTop from '../Helpers/getPositionFromTop';
 
 function EventCard({appointmentsData}) {
   
@@ -9,7 +10,10 @@ function EventCard({appointmentsData}) {
         {appointmentsData.map((appointment) => 
           <div 
               className='event' 
-              key={appointment.id} 
+              key={appointment.id}
+              style={{
+                top: getPositionFromTop(appointment.start) + '%', // start of event
+              }}
             >
            {appointment.id} - {appointment.start} h
           </div>
