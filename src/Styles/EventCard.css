@@ -1,10 +1,15 @@
 .event {
-  border-radius: 10px;
-  background-color: #EACF4F;
-  border: 1px solid #2C2B66;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  padding: 0 2vw;
+  justify-content: center;
   position: absolute;
-  width: 10vw;
+  box-shadow: 0 0px 10px 5px rgb(0 0 0 / 8%);
+  border: 1px solid black;
+  background-size:auto;
+  color: black;
+  background-color: white;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: 16px;
 }
