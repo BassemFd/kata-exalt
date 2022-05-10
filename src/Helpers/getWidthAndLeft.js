@@ -1,44 +1,44 @@
 import moment from 'moment';
 
-function getWidthAndLeft(events){
-  events.sort((a, b) => moment.duration(a.start).asMinutes() - moment.duration(b.start).asMinutes())
-events.forEach(appointment => {
-  appointment.startTime = moment.duration(appointment.start).asMinutes();
-  appointment.endTime = appointment.startTime + appointment.duration;
-  appointment.overlapsWith = [];
-  appointment.left = 0;
-});
+function getWidthAndLeftPosition(appointmentsData){
+  appointmentsData.sort((a, b) => moment.duration(a.start).asMinutes() - moment.duration(b.start).asMinutes());
 
-for (let i = 0; i < events.length; i++) {
-  for (let k = i + 1; k < events.length; k++) {
-      if (events[i] !== events[k]) {
-        if((events[i].startTime > events[k].startTime && events[i].endTime < events[k].endTime) 
-        || (events[i].startTime === events[k].startTime && events[i].endTime === events[k].endTime)
-        || (events[i].startTime > events[k].startTime && events[i].startTime < events[k].endTime && events[i].endTime > events[k].endTime)
-        || (events[i].startTime <= events[k].startTime && events[i].endTime > events[k].endTime)
-        || (events[i].startTime < events[k].startTime && events[i].endTime > events[k].startTime && events[i].endTime < events[k].endTime)
-        || (events[i].startTime < events[k].startTime && events[i].endTime === events[k].endTime)
-        ){
-            events[k].overlapsWith.push(events[i].id)
-            events[i].overlapsWith.push(events[k].id)
-            events[i].left += 33.3;
+  // Set fields for rendering events
+  appointmentsData.forEach(appointment => {
+    appointment.leftPosition = 0;
+    appointment.startTime = moment.duration(appointment.start).asMinutes();
+    appointment.endTime = appointment.startTime + appointment.duration;
+  });
 
-        }
-      }
+  // double loop to compare all events within each other
+      for (let i = 0; i < appointmentsData.length; i++) {
+        for (let k = i; k < appointmentsData.length; k++) {
+            if (i !== k 
+              && appointmentsData[i].endTime > appointmentsData[k].startTime 
+              && appointmentsData[i].startTime < appointmentsData[k].endTime 
+              && appointmentsData[i].leftPosition === appointmentsData[k].leftPosition)
+              {
+                appointmentsData[k].leftPosition++; // position from Y axis
+              }
+            }  
+          }
+      
+    // Here we find the number of events that overlaps in same period of time so we can divide the width by number of events accordingly
+      for (let i = 0; i < appointmentsData.length; i++) {
+        let numberOfOverlaps = 0;
+        for (let k = 0; k < appointmentsData.length; k++) {
+            if (i !== k 
+              && appointmentsData[i].endTime > appointmentsData[k].startTime 
+              && appointmentsData[i].startTime < appointmentsData[k].endTime 
+              && appointmentsData[i].leftPosition !== appointmentsData[k].leftPosition)
+              {
+                numberOfOverlaps = Math.max(...[numberOfOverlaps, appointmentsData[i].leftPosition, appointmentsData[k].leftPosition]);
+              }
+            }  
+        appointmentsData[i].width = 100 / (numberOfOverlaps + 1);
     }
-  };
 
-  events.map(event => {
-    if(event.overlapsWith.length === 0){
-      event.width = 100;
-      event.left = 0;
-    } else {
-      // event.width = 100/(event.overlapsWith.length);
-      event.width = 33.3;
-    }
-  })
-
-return events;
+return appointmentsData;
 }
 
-export default getWidthAndLeft;
+export default getWidthAndLeftPosition;
