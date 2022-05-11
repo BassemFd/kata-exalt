@@ -11,9 +11,9 @@ function getWidthAndLeftPosition(appointmentsData){
 
   // We sort event by event with next event by start time but also by end time, to figure out which events to group when overlapping
   appointmentsData.sort((a, b) =>{ 
-    if (a.startTime < b.startTime || a.endTime < b.endTime){ 
+    if (a.startTime < b.startTime || a.endTime > b.endTime){ 
       return -1
-    } else if(a.startTime > b.startTime || a.endTime > b.endTime){
+    } else if(a.startTime > b.startTime || a.endTime < b.endTime){
       return 1
     } else {
      return 0; 
