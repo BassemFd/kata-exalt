@@ -1,13 +1,23 @@
 import moment from 'moment';
 
 function getWidthAndLeftPosition(appointmentsData){
-  appointmentsData.sort((a, b) => moment.duration(a.start).asMinutes() - moment.duration(b.start).asMinutes());
 
   // Set fields for rendering events
   appointmentsData.forEach(appointment => {
     appointment.leftPosition = 0;
     appointment.startTime = moment.duration(appointment.start).asMinutes();
     appointment.endTime = appointment.startTime + appointment.duration;
+  });
+
+  // We sort event by event with next event by start time but also by end time, to figure out which events to group when overlapping
+  appointmentsData.sort((a, b) =>{ 
+    if (a.startTime < b.startTime || a.endTime < b.endTime){ 
+      return -1
+    } else if(a.startTime > b.startTime || a.endTime > b.endTime){
+      return 1
+    } else {
+     return 0; 
+   }
   });
 
   // double loop to compare all events within each other
